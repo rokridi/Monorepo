@@ -1,0 +1,57 @@
+name: DefinitionsKit
+options:
+  developmentLanguage: en
+  minimumXcodeGenVersion: 14.0
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  deploymentTarget:
+    iOS: "15.0"
+targetTemplates:
+  DefinitionsKitConfiguration:
+    templateAttributes:
+      framework_name: DefinitionsKit
+      workspace_base_path: ..
+packages:
+  DefinitionsKit:
+    path: ./framework
+targets:
+  DefinitionsKitDemo:
+    type: application
+    platform: iOS
+    templates:
+      - DefinitionsKitConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/demo/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.DefinitionsKit.${target_name}"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/demo
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    scheme:
+      testTargets:
+        - name: ${framework_name}UITests
+    dependencies:
+      - package: DefinitionsKit
+
+  DefinitionsKitUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    templates:
+      - DefinitionsKitConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/ui-tests/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.DefinitionsKit.${target_name}"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/ui-tests
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    dependencies:
+      - target: ${framework_name}Demo

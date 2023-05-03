@@ -1,0 +1,98 @@
+name: AdDetailKit
+options:
+  developmentLanguage: en
+  minimumXcodeGenVersion: 14.0
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  deploymentTarget: 
+    iOS: "15.0"
+targetTemplates:
+  AdDetailKitConfiguration:
+    templateAttributes:
+      framework_name: AdDetailKit
+      workspace_base_path: ..
+packages:
+  AdDetailKit:
+    path: ./framework
+targets:
+  AdDetailKitFramework:
+    type: framework
+    platform: iOS
+    templates:
+      - AdDetailKitConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/demo/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.AdDetailKit.${target_name}"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/demo
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    scheme:
+      testTargets:
+        - name: ${framework_name}FrameworkTests
+    dependencies:
+      - package: AdDetailKit
+  
+  AdDetailKitFrameworkTests:
+    type: bundle.unit-test
+    platform: iOS
+    templates:
+      - AdDetailKitConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/ui-tests/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.AdDetailKit.${target_name}"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/unit-tests
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    dependencies:
+      - target: ${framework_name}Framework
+
+  AdDetailKitDemo:
+    type: application
+    platform: iOS
+    templates:
+      - AdDetailKitConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/demo/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.AdDetailKit.${target_name}"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/demo
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    scheme:
+      testTargets:
+        - name: ${framework_name}UITests
+    dependencies:
+      - package: AdDetailKit
+
+  AdDetailKitUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    templates:
+      - AdDetailKitConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/ui-tests/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.AdDetailKit.${target_name}"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/ui-tests
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    dependencies:
+      - target: ${framework_name}Demo

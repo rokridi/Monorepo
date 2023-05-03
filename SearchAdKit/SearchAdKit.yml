@@ -1,0 +1,57 @@
+name: SearchAdKit
+options:
+  developmentLanguage: en
+  minimumXcodeGenVersion: 14.0
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  deploymentTarget:
+    iOS: "15.0"
+targetTemplates:
+  SearchAdKitConfiguration:
+    templateAttributes:
+      framework_name: SearchAdKit
+      workspace_base_path: ..
+packages:
+  SearchAdKit:
+    path: ./framework
+targets:
+  SearchAdKitDemo:
+    type: application
+    platform: iOS
+    templates:
+      - SearchAdKitConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/demo/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.SearchAdKit.${target_name}"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/demo
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    scheme:
+      testTargets:
+        - name: ${framework_name}UITests
+    dependencies:
+      - package: SearchAdKit
+
+  SearchAdKitUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    templates:
+      - SearchAdKitConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/ui-tests/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.SearchAdKit.${target_name}"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/ui-tests
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    dependencies:
+      - target: ${framework_name}Demo
