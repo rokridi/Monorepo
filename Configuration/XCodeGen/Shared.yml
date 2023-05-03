@@ -1,0 +1,87 @@
+options:
+  developmentLanguage: en
+  minimumXcodeGenVersion: 14.0
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  deploymentTarget: 
+    iOS: "15.0"
+targetTemplates:
+  DefaultConfiguration:
+    templateAttributes:
+      workspace_base_path: ../..
+  
+  Framework:
+    type: framework
+    platform: iOS
+    templates:
+      - DefaultConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/framework/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.${framework_name}"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/framework
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    scheme:
+      testTargets:
+        - name: ${framework_name}UnitTests
+  
+  FrameworkUnitTests:
+    type: bundle.unit-test
+    platform: iOS
+    templates:
+      - DefaultConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/unit-tests/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.${framework_name}.unitTests"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/unit-tests
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+  
+  FrameworkDemo:
+    type: application
+    platform: iOS
+    templates:
+      - DefaultConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/demo/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.${framework_name}.demo"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/demo
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    scheme:
+      testTargets:
+        - name: ${framework_name}UITests
+
+  FrameworkUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    templates:
+      - DefaultConfiguration
+    info:
+      path: ${workspace_base_path}/${framework_name}/ui-tests/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.rokridi.${framework_name}.${target_name}"
+    sources:
+      - path: ${workspace_base_path}/${framework_name}/ui-tests
+        group: ${framework_name}
+        optional: true
+        excludes:
+          - "**/Info.plist"
+    dependencies:
+      - target: ${framework_name}Demo
