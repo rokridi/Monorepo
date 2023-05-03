@@ -1,13 +1,13 @@
 //
 //  AppDelegate.swift
-//  FeatureAKitDemo
+//  SearchAdKitDemo
 //
 //  Created by mohamed.landolsi on 01/05/2023.
 //
 
 import UIKit
 import Foundation
-import FeatureAKit
+import SearchAdKit
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {}
+final class AppDelegate: UIResponder, UIApplicationDelegate {}
