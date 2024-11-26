@@ -1,36 +1,280 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta charset="UTF-8" />
+        <script type="text/javascript" src="https://js.sandbox.dalenys.com/hosted-fields/v2.1.0/hosted-fields.min.js"></script>
+
         <style>
-            .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
-            .switch input { opacity: 0; width: 0; height: 0; }
-            label.switch { outline: none; }
-            .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .4s; transition: .4s; outline: none; }
-            .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; -webkit-transition: .4s; transition: .4s; }
-            input:checked + .slider { background-color: #2196F3; }
-            input:focus + .slider { box-shadow: 0 0 1px #2196F3; }
-            input:checked + .slider:before { -webkit-transform: translateX(26px); -ms-transform: translateX(26px); transform: translateX(26px); }
-            .slider.round { border-radius: 34px; }
-            .slider.round:before { border-radius: 50%; }
+            body,
+            body * {
+                box-sizing: border-box;
+            }
+
+            body * {
+                font-family: "Open Sans", "Century Gothic", "Calibri", "Trebuchet MS", Arial, Helvetica, sans-serif;
+                font-size: 1em;
+            }
+
+            body {
+                min-width: 280px;
+                padding: 20px;
+                background-color: #ffffff;
+            }
+
+            .w1 {
+                width: 100%;
+            }
+
+            .w2 {
+                width: 48%;
+                display: inline-block;
+            }
+
+            .center {
+                text-align: center;
+            }
+
+            form {
+                max-width: 240px;
+            }
+
+            form,
+            #modal {
+                width: 100%;
+                margin: 0 auto;
+                overflow: hidden;
+                padding: 21px;
+                background-color: white;
+                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            }
+            form label,
+            #modal label {
+                font-weight: 600;
+            }
+            form p,
+            form p label,
+            #modal p,
+            #modal p label {
+                display: block;
+                width: 100%;
+            }
+            form div:not(:last-of-type) p,
+            form p:not(:last-of-type),
+            #modal div:not(:last-of-type) p,
+            #modal p:not(:last-of-type) {
+                margin-bottom: 15px;
+            }
+            form .w2:nth-of-type(3) p,
+            #modal .w2:nth-of-type(3) p {
+                margin-left: 20%;
+            }
+            form .w2 p,
+            #modal .w2 p {
+                width: 80%;
+            }
+            form .input-container,
+            form input[type=text],
+            #modal .input-container,
+            #modal input[type=text] {
+                display: inline-block;
+                width: 100%;
+                max-width: 100%;
+                height: 2em;
+                margin-top: 7px;
+                padding: 5px 7px 3px 7px;
+                border: 1px solid darkgrey;
+                border-radius: 5px;
+                box-shadow: 0 0 0 1px darkgrey;
+                transition: all 250ms ease-in-out;
+            }
+            form .input-container.hosted-fields-valid-state,
+            #modal .input-container.hosted-fields-valid-state {
+                border: 1px solid #37dcc8;
+                box-shadow: 0 0 0 1px #37dcc8;
+            }
+            form .input-container:not(.hosted-fields-empty-state):not(.hosted-fields-focus-state):not(.hosted-fields-valid-state):not(:empty),
+            #modal .input-container:not(.hosted-fields-empty-state):not(.hosted-fields-focus-state):not(.hosted-fields-valid-state):not(:empty) {
+                border: 1px solid #ff7063;
+                box-shadow: 0 0 0 1px #ff7063;
+            }
+            form input[type=submit],
+            form button,
+            #modal input[type=submit],
+            #modal button {
+                width: 100%;
+                max-width: 300px;
+                margin-top: 7px;
+                padding: 3px 14px 7px 14px;
+                border: 0;
+                border-top: 1px solid white;
+                border-radius: 5px;
+                background: #37dcc8;
+                font-size: 1.5em;
+                font-family: "Titillium Web", Arial, sans-serif;
+                font-weight: 600;
+                color: white;
+                vertical-align: baseline;
+                cursor: pointer;
+                transition: all 500ms;
+            }
+            form input[type=submit]:hover,
+            form button:hover,
+            #modal input[type=submit]:hover,
+            #modal button:hover {
+                background-color: #8eebe0;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            #modal {
+                z-index: 1;
+                display: none;
+                max-width: 380px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-top: -83px;
+                margin-left: -190px;
+            }
+            #modal button {
+                background: #27b9ff;
+            }
+            #modal button:hover {
+                background-color: #8ddaff;
+            }
         </style>
     </head>
     <body>
-        <h2 id="value">Toggle Switch is off</h2>
-        <label class="switch">
-            <input type="checkbox" name="myCheckbox">
-            <span class="slider round"></span>
-        </label>
-      <script>
-    var _selector = document.querySelector('input[name=myCheckbox]');
-    _selector.addEventListener('change', function(event) {
-        var message = (_selector.checked) ? "Toggle Switch is on" : "Toggle Switch is off";
-        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.toggleMessageHandler) {
-            window.webkit.messageHandlers.toggleMessageHandler.postMessage({
-                "message": message
+        <form id="payment-form" method="post" name="dalenysForm" onsubmit="return tokenizeHandler()">
+            QR Result <input type="text" name="result" id="result" width="200">
+             <div class="w1">
+                <p>
+                    <label>Card number</label>
+                    <span class="input-container" id="card-container"></span>
+                </p>
+            </div>
+            <div class="w2">
+                <p>
+                    <label>Expiry</label>
+                    <span class="input-container" id="expiry-container"></span>
+                </p>
+            </div>
+            <div class="w2">
+                <p>
+                    <label>CVV</label>
+                    <span class="input-container" id="cvv-container"></span>
+                </p>
+            </div>
+            <div class="w2">
+                <p>
+                    <label>Brand</label>
+                    <span class="input-container" id="brand-container"></span>
+                </p>
+            </div>
+            <div class="w1">
+                <p>
+                    <input type='submit' value='Pay'>
+                </p>
+            </div>
+            <!-- This hidden input will receive the token -->
+            <input type="hidden" name="hf-token" id="hf-token">
+        </form>
+<!--        <div id="modal">-->
+<!--            <p>-->
+<!--                <label>Generated token</label>-->
+<!--                <input type="text" id="modal-hf-token">-->
+<!--            </p>-->
+<!--            <p class="center">-->
+<!--                <button onclick="copyAndClose(document.querySelector('#modal-hf-token'))">Copy and close</button>-->
+<!--            </p>-->
+<!--        </div>-->
+        <script>
+            // Define some style properties to apply on hosted-fields inputs
+            var style = {
+                "input": {
+                    "font-size": "1em",
+                },
+                "::placeholder": {
+                    "font-size": "1em",
+                    "color": "#777",
+                    "font-style": "italic"
+                }
+            };
+
+            // Initialize the hosted-fields library
+            var hfields = dalenys.hostedFields({
+                // API Keys
+                key: {
+                    id: "970c4f7c-c62e-40d2-8084-b61781326c81",
+                    value: "lr3*{F/4?nLnTq.t"
+                },
+                // Manages each hosted-field container
+                fields: {
+                    'card': {
+                        id: 'card-container',
+                        placeholder: '•••• •••• •••• ••••',
+                        enableAutospacing: true,
+                        style: style
+                    },
+                    brand: {
+                        id: "brand-container",
+                        style: style
+                    },
+                    'expiry': {
+                        id: 'expiry-container',
+                        placeholder: 'MM/YY',
+                        style: style
+                    },
+                    'cryptogram': {
+                        id: 'cvv-container',
+                        style: style
+                    }
+                }
             });
-        }
-    });
-</script>
+
+            // Load the hosted-fields library
+            hfields.load();
+
+            // Manage the token creation
+            function tokenizeHandler() {
+                hfields.createToken(function(result) {
+                    console.log(result);
+                    if (result.execCode == '0000') {
+                        // Add token to form request
+                        document.querySelector("#hf-token").value = result.hfToken;
+                        // document.querySelector("#modal").style.display = "block";
+                        // document.querySelector("#modal-hf-token").value = result.hfToken;
+                        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.toggleMessageHandler) {
+                            window.webkit.messageHandlers.toggleMessageHandler.postMessage({
+                                "message": result.hfToken
+                            });
+                        }
+                        // document.dalenysForm.submit(); # Form submission is disabled for this demo, think to uncomment the line below to make it works in your integration
+                    } else {
+                        console.log(result.execCode+': '+result.message);
+                    }
+                });
+                return false;
+            }
+
+            // Copy the token in the clipboard and close the modal
+            function copyAndClose(elem)
+            {
+                // Copy to clipboard
+                elem.select();
+                elem.setSelectionRange(0, 99999); /* For mobile devices */
+                document.execCommand("copy");
+
+                // Close the modal
+                setTimeout(function(){ document.querySelector("#modal").style.display = "none"; }, 100);
+            }
+
+            $(document).ready(function(){
+                $("#payment-form").draggable({stack: "body>*"});
+                // $("#modal").draggable({stack: "body>*"});
+            });
+        </script>
     </body>
 </html>
